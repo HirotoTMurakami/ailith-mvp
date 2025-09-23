@@ -6,7 +6,7 @@ export interface SessionData {
 
 export const sessionOptions: SessionOptions = {
   cookieName: 'ailith_session',
-  password: process.env.SESSION_SECRET || 'dev-secret-change-me',
+  password: process.env.SESSION_SECRET || 'dev-secret-change-me-dev-secret-change-me-0123456789',
   cookieOptions: {
     secure: process.env.NODE_ENV === 'production'
   }
