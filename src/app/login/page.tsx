@@ -1,17 +1,19 @@
 "use client"
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const search = useSearchParams()
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
     const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username }) })
     if (!res.ok) { setError('Login failed'); return }
-    router.push('/')
+    const next = search.get('next') || '/'
+    router.push(next)
   }
   return (
     <div className="max-w-sm mx-auto p-6">
