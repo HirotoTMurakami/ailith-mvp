@@ -2,12 +2,19 @@
 import useSWR from 'swr'
 import { useState } from 'react'
 
-const fetcher = (url: string) => fetch(url).then(r => r.json())
+const fetcher = async (url: string) => {
+  const r = await fetch(url)
+  if (!r.ok) {
+    const msg = await r.text().catch(() => '')
+    throw new Error(msg || `Request failed: ${r.status}`)
+  }
+  return r.json()
+}
 
 type PendingProduct = { id: string; title: string; downloadPassword?: string | null }
 
 export default function AdminProductsPage() {
-  const { data, mutate } = useSWR<PendingProduct[]>('/api/admin/products/pending', fetcher)
+  const { data, error, mutate } = useSWR<PendingProduct[]>('/api/admin/products/pending', fetcher)
   const [noteUrl, setNoteUrl] = useState('')
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -20,8 +27,11 @@ export default function AdminProductsPage() {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Pending Products</h1>
+      {error && (
+        <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
+      )}
       <div className="grid gap-2">
-        {data?.map((p) => (
+        {Array.isArray(data) && data.map((p) => (
           <div key={p.id} className={`border p-3 ${selected===p.id ? 'bg-gray-50' : ''}`}>
             <div className="font-medium">{p.title}</div>
             <div className="text-sm text-gray-600">Password: <span className="font-mono">{p.downloadPassword || '-'}</span></div>

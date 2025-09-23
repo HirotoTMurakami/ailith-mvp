@@ -29,7 +29,7 @@ export default function Header() {
               <button onClick={logout} className="text-gray-600">Logout</button>
             </>
           ) : (
-            <Link href="/login">Login</Link>
+            <Link href="/login">Login / Sign Up</Link>
           )}
         </nav>
       </div>
