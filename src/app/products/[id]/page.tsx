@@ -34,7 +34,7 @@ export default async function ProductDetail({ params, searchParams }: { params: 
       <h1 className="text-2xl font-semibold">{product.title}</h1>
       {videoId && (
         <div>
-          <div className="text-xs text-gray-600 mb-1">Sample preview</div>
+          <div className="text-xs text-gray-600 mb-1">{i18n.samplePreview}</div>
           <div className="aspect-video border">
             <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${videoId}`} title="Sample preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
           </div>
@@ -44,13 +44,13 @@ export default async function ProductDetail({ params, searchParams }: { params: 
       <div className="flex items-center justify-between">
         <div className="text-xl font-bold">{i18n.priceJPYWithUSD(yen, usdRate)}</div>
         {product.noteUrl ? (
-          <Link href={product.noteUrl} className="bg-emerald-600 text-white px-4 py-2">Buy with note</Link>
+          <Link href={product.noteUrl} className="bg-emerald-600 text-white px-4 py-2">{i18n.buyWithNote}</Link>
         ) : (
           <Link href={`/checkout/${product.id}?lang=${lang}`} className="bg-rose-600 text-white px-4 py-2">{i18n.buy}</Link>
         )}
       </div>
       <div className="border p-4 space-y-2">
-        <div className="text-sm text-gray-700">Enter password purchased on note to download</div>
+        <div className="text-sm text-gray-700">{i18n.enterPasswordNote}</div>
         <PasswordForm productId={product.id} />
       </div>
     </div>

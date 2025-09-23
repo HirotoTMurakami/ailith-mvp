@@ -17,6 +17,11 @@ export const t = (lang: Lang) => ({
   create: lang === 'ja' ? '作成' : 'Create',
   saving: lang === 'ja' ? '保存中...' : 'Saving...',
   buy: lang === 'ja' ? 'CCBillで購入' : 'Buy with CCBill',
+  buyWithNote: lang === 'ja' ? 'noteで購入' : 'Buy with note',
+  samplePreview: lang === 'ja' ? 'サンプルプレビュー' : 'Sample preview',
+  enterPasswordNote: lang === 'ja' ? 'noteで購入したパスワードを入力してダウンロード' : 'Enter password purchased on note to download',
+  password: lang === 'ja' ? 'パスワード' : 'Password',
+  download: lang === 'ja' ? 'ダウンロード' : 'Download',
   priceJPYWithUSD: (yen: number, usdRate: number) => {
     const usd = (yen * usdRate).toFixed(2)
     return lang === 'ja' ? `¥${yen} (≈ $${usd})` : `¥${yen} (≈ $${usd})`

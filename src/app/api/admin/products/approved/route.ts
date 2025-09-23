@@ -17,6 +17,7 @@ export async function GET() {
     currencyCode: p.currencyCode,
     youtubeUrl: p.youtubeUrl,
     dropboxPath: p.dropboxPath,
+    noteUrl: (p as unknown as { noteUrl?: string | null }).noteUrl ?? null,
     downloadPassword: (p as unknown as { downloadPassword?: string | null }).downloadPassword ?? null,
     seller: p.seller ? { id: p.seller.id, username: p.seller.username, dropboxAccessToken: p.seller.dropboxAccessToken ?? null } : null,
     createdAt: p.createdAt,

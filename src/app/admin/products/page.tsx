@@ -44,7 +44,7 @@ export default function AdminProductsPage() {
 
   const save = async (p: PendingProduct) => {
     const priceYen = Math.round(p.priceCents/100)
-    await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath }) })
+    await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath, noteUrl: (p as any).noteUrl ?? null }) })
     mutP(); mutA()
   }
 
@@ -101,6 +101,7 @@ export default function AdminProductsPage() {
             <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" defaultValue={p.youtubeUrl} onBlur={e => { p.youtubeUrl = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" defaultValue={p.dropboxPath} onBlur={e => { p.dropboxPath = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={Math.round(p.priceCents/100)} onBlur={e => { const v = Number(e.target.value)||0; p.priceCents = v*100; save(p) }} /> (JPY)</div>
+            <div className="text-sm text-gray-600">note URL: <input className="border px-1 py-0.5 w-full" defaultValue={(p as any).noteUrl || ''} onBlur={e => { (p as any).noteUrl = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Title: <input className="border px-1 py-0.5 w-full" defaultValue={p.title} onBlur={e => { p.title = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Description:<textarea className="border px-1 py-0.5 w-full" defaultValue={p.description} onBlur={e => { p.description = e.target.value; save(p) }} />
             </div>
