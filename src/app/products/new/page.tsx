@@ -26,8 +26,9 @@ export default function NewProductPage() {
       if (!res.ok) throw new Error('Failed to create product')
       const product = await res.json()
       router.push(`/products/${product.id}`)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      setError(message)
     } finally {
       setLoading(false)
     }

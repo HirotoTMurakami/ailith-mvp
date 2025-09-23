@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       data: { title, description: description ?? '', priceCents: Number(priceCents), currencyCode, youtubeUrl, dropboxPath }
     })
     return NextResponse.json(product, { status: 201 })
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 }
