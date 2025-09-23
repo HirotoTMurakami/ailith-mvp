@@ -1,6 +1,6 @@
 MVP for an AI video marketplace with YouTube samples, Dropbox delivery, and CCBill checkout.
 
-## Quick start
+## Quick start v1.0.x
 
 1. Create `.env` in project root:
 
