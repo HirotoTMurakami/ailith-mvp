@@ -56,8 +56,8 @@ export default function AdminProductsPage() {
     mutP(); mutA()
   }
 
-  const recordSale = async (id: string, yen: number) => {
-    await fetch('/api/admin/orders/record', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, amountYen: yen }) })
+  const recordSale = async (id: string) => {
+    await fetch('/api/admin/orders/record', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id }) })
     mutP(); mutA()
   }
 
@@ -86,7 +86,7 @@ export default function AdminProductsPage() {
               <button className="text-blue-600 underline" onClick={() => setSelected(p.id)}>Select</button>
               <button className="text-red-600 underline" onClick={() => deny(p.id)}>Deny</button>
               <button className="text-emerald-700 underline" onClick={() => save(p)}>Save</button>
-              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id, Math.round(p.priceCents/100))}>Record Sale</button>
+              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id)}>Record Sale</button>
               <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
             </div>
           </div>
