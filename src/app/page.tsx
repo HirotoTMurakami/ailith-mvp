@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
-import { t, getLangFromSearch } from '@/lib/i18n'
+import { t } from '@/lib/i18n'
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: { lang?: string } }) {
   const products = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
-  const lang = getLangFromSearch(new URLSearchParams())
+  const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
   const i18n = t(lang)
   return (
     <main className="max-w-5xl mx-auto p-6">

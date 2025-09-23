@@ -1,10 +1,10 @@
 "use client"
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { t, getLangFromSearch } from '@/lib/i18n'
 
-export default function NewProductPage() {
+function NewProductFormInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const lang = getLangFromSearch(searchParams)
@@ -58,6 +58,14 @@ export default function NewProductPage() {
         <button className="bg-blue-600 text-white px-4 py-2" disabled={loading}>{loading ? i18n.saving : i18n.create}</button>
       </form>
     </div>
+  )
+}
+
+export default function NewProductPage() {
+  return (
+    <Suspense fallback={<div className="max-w-2xl mx-auto p-6" />}> 
+      <NewProductFormInner />
+    </Suspense>
   )
 }
 
