@@ -1,10 +1,10 @@
 {
   "name": "ailith-mvp",
-  "version": "1.0.41",
+  "version": "1.0.46",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma generate && prisma migrate deploy && next build --turbopack",
+    "build": "prisma generate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",

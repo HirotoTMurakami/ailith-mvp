@@ -10,7 +10,7 @@ export async function GET() {
   console.log('Auth me - DB User:', dbUser)
   return NextResponse.json({ 
     user: { ...session.user, role: dbUser?.role },
-    debug: { sessionRole: session.user.role, dbRole: dbUser?.role }
+    debug: { sessionRole: (session.user as unknown as { role?: string }).role ?? 'not set', dbRole: dbUser?.role }
   })
 }
 
