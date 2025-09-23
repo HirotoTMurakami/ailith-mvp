@@ -15,6 +15,7 @@ function NewProductFormInner() {
   const [currencyCode, setCurrencyCode] = useState('840')
   const [youtubeUrl, setYoutubeUrl] = useState('')
   const [dropboxPath, setDropboxPath] = useState('')
+  const [noteUrl, setNoteUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,7 +27,7 @@ function NewProductFormInner() {
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, priceCents, currencyCode, youtubeUrl, dropboxPath })
+        body: JSON.stringify({ title, description, priceCents, currencyCode, youtubeUrl, dropboxPath, noteUrl })
       })
       if (!res.ok) throw new Error('Failed to create product')
       const product = await res.json()
@@ -54,6 +55,7 @@ function NewProductFormInner() {
         </div>
         <input className="w-full border p-2" placeholder={i18n.youtubeUrl} value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} required />
         <input className="w-full border p-2" placeholder={`${i18n.dropboxPath} (e.g. /videos/foo.mp4)`} value={dropboxPath} onChange={e => setDropboxPath(e.target.value)} required />
+        <input className="w-full border p-2" placeholder="note URL (optional)" value={noteUrl} onChange={e => setNoteUrl(e.target.value)} />
         {error && <p className="text-red-600">{error}</p>}
         <button className="bg-blue-600 text-white px-4 py-2" disabled={loading}>{loading ? i18n.saving : i18n.create}</button>
       </form>
