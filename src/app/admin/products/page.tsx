@@ -56,7 +56,7 @@ export default function AdminProductsPage() {
 
   const recordSale = async (id: string, yen: number) => {
     await fetch('/api/admin/orders/record', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, amountYen: yen }) })
-    mutate()
+    mutP(); mutA()
   }
 
   return (
