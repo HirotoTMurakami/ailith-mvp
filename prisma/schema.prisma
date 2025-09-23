@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  priceCents    Int
+  currencyCode  String   @default("840") // 840=USD per ISO 4217 numeric
+  youtubeUrl    String
+  dropboxPath   String   // Dropbox file path accessible to the app token
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  orders        Order[]
+}
+
+model Order {
+  id                  String   @id @default(cuid())
+  productId           String
+  product             Product  @relation(fields: [productId], references: [id])
+  amountCents         Int
+  currencyCode        String
+  status              OrderStatus @default(PENDING)
+  ccbillTransactionId String?    // set after return
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  downloadTokens      DownloadToken[]
+}
+
+model DownloadToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+}
