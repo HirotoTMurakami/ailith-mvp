@@ -1,5 +1,5 @@
 "use client"
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 function SettingsInner() {
@@ -10,6 +10,16 @@ function SettingsInner() {
   const router = useRouter()
   const search = useSearchParams()
   const lang = search.get('lang') === 'ja' ? 'ja' : 'en'
+  useEffect(() => {
+    ;(async () => {
+      const r = await fetch('/api/users/me/profile')
+      if (!r.ok) return
+      const j = await r.json()
+      setToken(j.profile?.dropboxAccessToken || '')
+      setPaypal(j.profile?.paypalEmail || '')
+      if (j.profile?.preferredLanguage === 'ja' || j.profile?.preferredLanguage === 'en') setLang(j.profile.preferredLanguage)
+    })()
+  }, [])
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setMsg(null)

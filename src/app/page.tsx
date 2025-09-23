@@ -7,8 +7,9 @@ export default async function Home({ searchParams }: { searchParams: { lang?: st
   const all = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
   const products = all.filter(p => (p as unknown as { approvalStatus?: string }).approvalStatus === 'APPROVED')
   const session = await getSession()
-  let lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
-  if (session.user) {
+  // Prefer URL lang over user preference
+  let lang = searchParams?.lang === 'ja' ? 'ja' : searchParams?.lang === 'en' ? 'en' : 'en'
+  if (!searchParams?.lang && session.user) {
     const rows = await prisma.$queryRaw<Array<{ preferredLanguage: string | null }>>`
       SELECT "preferredLanguage" FROM "User" WHERE id = ${session.user.id}
     `
