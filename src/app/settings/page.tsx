@@ -1,8 +1,8 @@
 "use client"
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function SettingsPage() {
+function SettingsInner() {
   const [dropboxAccessToken, setToken] = useState('')
   const [paypalEmail, setPaypal] = useState('')
   const [preferredLanguage, setLang] = useState<'ja'|'en'>('en')
@@ -92,6 +92,14 @@ export default function SettingsPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<div className="max-w-lg mx-auto p-6" />}> 
+      <SettingsInner />
+    </Suspense>
   )
 }
 
