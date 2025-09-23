@@ -10,7 +10,7 @@ export default function Header() {
   const search = useSearchParams()
   const lang = getLangFromSearch(search)
   const i18n = t(lang)
-  const { data } = useSWR('/api/auth/me', fetcher)
+  const { data } = useSWR('/api/auth/me', fetcher, { suspense: true })
   const user = data?.user as { username: string; role?: string } | undefined
   const logout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
