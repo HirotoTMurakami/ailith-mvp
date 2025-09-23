@@ -25,32 +25,33 @@ type PendingProduct = {
 }
 
 export default function AdminProductsPage() {
-  const { data, error, mutate } = useSWR<PendingProduct[]>('/api/admin/products/pending', fetcher)
+  const { data: pending, error: errP, mutate: mutP } = useSWR<PendingProduct[]>('/api/admin/products/pending', fetcher)
+  const { data: approved, error: errA, mutate: mutA } = useSWR<PendingProduct[]>('/api/admin/products/approved', fetcher)
   const [noteUrl, setNoteUrl] = useState('')
   const [selected, setSelected] = useState<string | null>(null)
 
   const approve = async () => {
     if (!selected || !noteUrl) return
     const res = await fetch('/api/admin/products/approve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: selected, noteUrl }) })
-    if (res.ok) { setSelected(null); setNoteUrl(''); mutate() }
+    if (res.ok) { setSelected(null); setNoteUrl(''); mutP(); mutA() }
   }
 
   const deny = async (id: string) => {
     await fetch('/api/admin/products/deny', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id }) })
     setSelected(s => (s === id ? null : s))
-    mutate()
+    mutP(); mutA()
   }
 
   const save = async (p: PendingProduct) => {
     const priceYen = Math.round(p.priceCents/100)
     await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath }) })
-    mutate()
+    mutP(); mutA()
   }
 
   const remove = async (id: string) => {
     await fetch('/api/admin/products/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
     setSelected(s => (s === id ? null : s))
-    mutate()
+    mutP(); mutA()
   }
 
   const recordSale = async (id: string, yen: number) => {
@@ -61,11 +62,11 @@ export default function AdminProductsPage() {
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Pending Products</h1>
-      {error && (
+      {errP && (
         <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
       )}
       <div className="grid gap-2">
-        {Array.isArray(data) && data.map((p) => (
+        {Array.isArray(pending) && pending.map((p) => (
           <div key={p.id} className={`border p-3 ${selected===p.id ? 'bg-gray-50' : ''}`}>
             <div className="font-medium">{p.title}</div>
             <div className="text-sm text-gray-700 whitespace-pre-wrap">{p.description}</div>
@@ -85,6 +86,27 @@ export default function AdminProductsPage() {
               <button className="text-emerald-700 underline" onClick={() => save(p)}>Save</button>
               <button className="text-indigo-700 underline" onClick={() => recordSale(p.id, Math.round(p.priceCents/100))}>Record Sale</button>
               <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <h2 className="text-xl font-semibold mt-6">Approved Products</h2>
+      {errA && (
+        <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
+      )}
+      <div className="grid gap-2">
+        {Array.isArray(approved) && approved.map((p) => (
+          <div key={p.id} className={`border p-3`}>
+            <div className="font-medium">{p.title}</div>
+            <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" defaultValue={p.youtubeUrl} onBlur={e => { p.youtubeUrl = e.target.value; save(p) }} /></div>
+            <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" defaultValue={p.dropboxPath} onBlur={e => { p.dropboxPath = e.target.value; save(p) }} /></div>
+            <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={Math.round(p.priceCents/100)} onBlur={e => { const v = Number(e.target.value)||0; p.priceCents = v*100; save(p) }} /> (JPY)</div>
+            <div className="text-sm text-gray-600">Title: <input className="border px-1 py-0.5 w-full" defaultValue={p.title} onBlur={e => { p.title = e.target.value; save(p) }} /></div>
+            <div className="text-sm text-gray-600">Description:<textarea className="border px-1 py-0.5 w-full" defaultValue={p.description} onBlur={e => { p.description = e.target.value; save(p) }} />
+            </div>
+            <div className="mt-2 flex gap-3">
+              <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
+              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id, Math.round(p.priceCents/100))}>Record Sale</button>
             </div>
           </div>
         ))}
