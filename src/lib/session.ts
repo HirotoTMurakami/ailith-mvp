@@ -1,10 +1,10 @@
-import { IronSessionOptions } from 'iron-session'
+import { SessionOptions } from 'iron-session'
 
 export interface SessionData {
   user?: { id: string; username: string }
 }
 
-export const sessionOptions: IronSessionOptions = {
+export const sessionOptions: SessionOptions = {
   cookieName: 'ailith_session',
   password: process.env.SESSION_SECRET || 'dev-secret-change-me',
   cookieOptions: {
