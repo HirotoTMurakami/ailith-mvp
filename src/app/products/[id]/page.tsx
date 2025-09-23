@@ -1,12 +1,15 @@
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import { t } from '@/lib/i18n'
 
 
-export default async function ProductDetail({ params }: { params: { id: string } }) {
+export default async function ProductDetail({ params, searchParams }: { params: { id: string }, searchParams: { lang?: string } }) {
   const product = await prisma.product.findUnique({ where: { id: params.id } })
   if (!product) {
     return <div className="p-6">Not found</div>
   }
+  const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
+  const i18n = t(lang)
   // Extract YouTube embed id
   const match = product.youtubeUrl.match(/(?:v=|youtu\.be\/)([\w-]+)/)
   const videoId = match?.[1]
@@ -21,8 +24,8 @@ export default async function ProductDetail({ params }: { params: { id: string }
       )}
       <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
       <div className="flex items-center justify-between">
-        <div className="text-xl font-bold">${(product.priceCents / 100).toFixed(2)} USD</div>
-        <Link href={`/checkout/${product.id}`} className="bg-rose-600 text-white px-4 py-2">Buy with CCBill</Link>
+        <div className="text-xl font-bold">{i18n.priceUSD(product.priceCents)}</div>
+        <Link href={`/checkout/${product.id}?lang=${lang}`} className="bg-rose-600 text-white px-4 py-2">{i18n.buy}</Link>
       </div>
     </div>
   )
