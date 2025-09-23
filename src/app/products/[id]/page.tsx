@@ -14,7 +14,7 @@ export default async function ProductDetail({ params, searchParams }: { params: 
     return <div className="p-6">Not available</div>
   }
   const session = await getSession()
-  let lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
+  let lang: 'ja' | 'en' = searchParams?.lang === 'ja' ? 'ja' : 'en'
   if (session.user) {
     const rows = await prisma.$queryRaw<Array<{ preferredLanguage: string | null }>>`
       SELECT "preferredLanguage" FROM "User" WHERE id = ${session.user.id}
