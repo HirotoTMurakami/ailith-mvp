@@ -100,6 +100,7 @@ export default function AdminProductsPage() {
         {Array.isArray(approved) && approved.map((p) => (
           <div key={p.id} className={`border p-3`}>
             <div className="font-medium">{p.title}</div>
+            <div className="text-sm text-gray-600">Seller: {p.seller?.username || '-'}</div>
             <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" defaultValue={p.youtubeUrl} onBlur={e => { p.youtubeUrl = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" defaultValue={p.dropboxPath} onBlur={e => { p.dropboxPath = e.target.value; save(p) }} /></div>
             <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={Math.round(p.priceCents/100)} onBlur={e => { const v = Number(e.target.value)||0; p.priceCents = v*100; save(p) }} /> (JPY)</div>
@@ -110,7 +111,7 @@ export default function AdminProductsPage() {
             <div className="text-sm text-gray-600">Sales Count: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={p.salesCount ?? 0} onBlur={e => { p.salesCount = Number(e.target.value)||0; save(p) }} /></div>
             <div className="mt-2 flex gap-3">
               <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
-              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id, Math.round(p.priceCents/100))}>Record Sale</button>
+              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id)}>Record Sale</button>
             </div>
           </div>
         ))}
