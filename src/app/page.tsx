@@ -1,19 +1,23 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import { t } from '@/lib/i18n'
+import { getSession } from '@/lib/auth'
 
 export default async function Home({ searchParams }: { searchParams: { lang?: string } }) {
   const all = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
   const products = all.filter(p => (p as unknown as { approvalStatus?: string }).approvalStatus === 'APPROVED')
   const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
   const i18n = t(lang)
+  const session = await getSession()
   return (
     <main className="max-w-5xl mx-auto p-6">
       <div className="flex items-center justify-between mb-4">
         <h1 className="text-2xl font-semibold">{i18n.homeTitle}</h1>
         <div className="flex gap-2">
           <Link href={`/?lang=${lang === 'ja' ? 'en' : 'ja'}`} className="text-sm underline self-center">{i18n.langToggle}</Link>
-          <Link href={`/products/new?lang=${lang}`} className="bg-blue-600 text-white px-4 py-2">{i18n.newProduct}</Link>
+          {session.user && (
+            <Link href={`/products/new?lang=${lang}`} className="bg-blue-600 text-white px-4 py-2">{i18n.newProduct}</Link>
+          )}
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

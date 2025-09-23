@@ -13,24 +13,23 @@ export async function POST(req: NextRequest) {
     const session = await getSession()
     if (!session.user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     const body = await req.json()
-    const { title, description, priceCents, currencyCode = '840', youtubeUrl, dropboxPath, noteUrl } = body
+    const { title, description, priceCents, currencyCode = '840', youtubeUrl, dropboxPath } = body
     if (!title || !youtubeUrl || !dropboxPath || !priceCents) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     const downloadPassword = crypto.randomBytes(8).toString('base64url')
     const product = await prisma.product.create({
-      data: {
+      data: ({
         title,
         description: description ?? '',
         priceCents: Number(priceCents),
         currencyCode,
         youtubeUrl,
         dropboxPath,
-        noteUrl: noteUrl ?? null,
         sellerId: session.user.id,
         approvalStatus: 'PENDING',
         downloadPassword
-      }
+      }) as any
     })
     return NextResponse.json(product, { status: 201 })
   } catch {
