@@ -8,7 +8,8 @@ export default async function Dashboard({ searchParams }: { searchParams: { lang
   const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
   const i18n = t(lang)
   const myProducts = await prisma.product.findMany({ where: { sellerId: session.user.id } })
-  const grossCents = myProducts.reduce((sum, p) => sum + (p.priceCents * ((p as any).salesCount ?? 0)), 0)
+  const typed = myProducts as Array<{ id: string; title: string; priceCents: number; salesCount?: number | null }>
+  const grossCents = typed.reduce((sum, p) => sum + (p.priceCents * (p.salesCount ?? 0)), 0)
   const payoutCents = Math.round(grossCents * 0.7)
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-4">
@@ -26,10 +27,10 @@ export default async function Dashboard({ searchParams }: { searchParams: { lang
       <div className="border p-4">
         <div className="font-medium mb-2">{lang==='ja'?'各商品の売上':'Sales by Product'}</div>
         <div className="space-y-2">
-          {myProducts.map(p => (
+          {typed.map(p => (
             <div key={p.id} className="text-sm flex items-center justify-between">
               <span>{p.title}</span>
-              <span className="text-gray-700">{((p as any).salesCount ?? 0)} × ¥{Math.round(p.priceCents/100)} = ¥{Math.round((((p as any).salesCount ?? 0) * p.priceCents)/100)}</span>
+              <span className="text-gray-700">{(p.salesCount ?? 0)} × ¥{Math.round(p.priceCents/100)} = ¥{Math.round(((p.salesCount ?? 0) * p.priceCents)/100)}</span>
             </div>
           ))}
         </div>
