@@ -18,19 +18,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     const downloadPassword = crypto.randomBytes(8).toString('base64url')
-    const product = await prisma.product.create({
-      data: ({
-        title,
-        description: description ?? '',
-        priceCents: Number(priceCents),
-        currencyCode,
-        youtubeUrl,
-        dropboxPath,
-        sellerId: session.user.id,
-        approvalStatus: 'PENDING',
-        downloadPassword
-      }) as any
-    })
+    const data = {
+      title,
+      description: description ?? '',
+      priceCents: Number(priceCents),
+      currencyCode,
+      youtubeUrl,
+      dropboxPath,
+      sellerId: session.user.id,
+      approvalStatus: 'PENDING',
+      downloadPassword
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const product = await prisma.product.create({ data: data as any })
     return NextResponse.json(product, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
