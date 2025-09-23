@@ -6,7 +6,12 @@ export async function GET() {
   const session = await getSession()
   if (!session.user) return NextResponse.json({ user: null })
   const dbUser = await prisma.user.findUnique({ where: { id: session.user.id } })
-  return NextResponse.json({ user: { ...session.user, role: dbUser?.role } })
+  console.log('Auth me - Session:', session.user)
+  console.log('Auth me - DB User:', dbUser)
+  return NextResponse.json({ 
+    user: { ...session.user, role: dbUser?.role },
+    debug: { sessionRole: session.user.role, dbRole: dbUser?.role }
+  })
 }
 
 
