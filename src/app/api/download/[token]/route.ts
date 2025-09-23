@@ -18,8 +18,9 @@ async function getDropboxTemporaryLink(path: string): Promise<string> {
   return json.link as string
 }
 
-export async function GET(_req: NextRequest, { params }: { params: { token: string } }) {
-  const record = await prisma.downloadToken.findUnique({ where: { token: params.token }, include: { order: { include: { product: true } } } })
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params
+  const record = await prisma.downloadToken.findUnique({ where: { token }, include: { order: { include: { product: true } } } })
   if (!record || record.used) return NextResponse.json({ error: 'Invalid token' }, { status: 404 })
   if (record.expiresAt.getTime() < Date.now()) return NextResponse.json({ error: 'Token expired' }, { status: 410 })
 
