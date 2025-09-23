@@ -86,7 +86,7 @@ export default function SettingsPage() {
               Paste the generated token into the field above and click Save. Do not share your token.
             </li>
             <li>
-              After saving, use the product form "Dropbox file path" like <code className="bg-gray-100 px-1">/videos/sample.mp4</code>.
+              After saving, use the product form &quot;Dropbox file path&quot; like <code className="bg-gray-100 px-1">/videos/sample.mp4</code>.
             </li>
           </ol>
         )}

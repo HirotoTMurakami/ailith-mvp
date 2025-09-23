@@ -1,7 +1,7 @@
 "use client"
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { t, getLangFromSearch } from '@/lib/i18n'
+import { getLangFromSearch } from '@/lib/i18n'
 
 function AuthInner() {
   const [mode, setMode] = useState<'login'|'signup'>('login')
@@ -12,7 +12,6 @@ function AuthInner() {
   const router = useRouter()
   const search = useSearchParams()
   const lang = getLangFromSearch(search)
-  const i18n = t(lang)
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
