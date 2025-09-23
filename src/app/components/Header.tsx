@@ -17,7 +17,7 @@ export default function Header() {
     window.location.href = '/'
   }
   return (
-    <header className="border-b bg-[var(--card)]/90 backdrop-blur">
+    <header className="border-b bg-[var(--card)]/90 backdrop-blur sticky top-0 z-40">
       <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
         <Link href={`/?lang=${lang}`} className="font-semibold flex items-center gap-2 text-[var(--foreground)]">
           <span className="inline-block w-7 h-7 rounded-md bg-[var(--foreground)] text-[var(--card)] text-xs flex items-center justify-center">A</span>
