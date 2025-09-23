@@ -1,8 +1,8 @@
 "use client"
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function LoginPage() {
+function LoginFormInner() {
   const [username, setUsername] = useState('')
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -24,6 +24,14 @@ export default function LoginPage() {
         <button className="bg-blue-600 text-white px-4 py-2">Login</button>
       </form>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="max-w-sm mx-auto p-6" />}> 
+      <LoginFormInner />
+    </Suspense>
   )
 }
 
