@@ -20,16 +20,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Seller Dropbox Access Token is required. Please set it in Settings.' }, { status: 400 })
     }
     const body = await req.json()
-    const { title, description, priceCents, currencyCode = '840', youtubeUrl, dropboxPath } = body
-    if (!title || !youtubeUrl || !dropboxPath || !priceCents) {
+    const { title, description, priceYen, youtubeUrl, dropboxPath } = body
+    if (!title || !youtubeUrl || !dropboxPath || !priceYen) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
     const downloadPassword = crypto.randomBytes(8).toString('base64url')
     const data = {
       title,
       description: description ?? '',
-      priceCents: Number(priceCents),
-      currencyCode,
+      priceCents: Math.round(Number(priceYen) * 100),
+      currencyCode: '392',
       youtubeUrl,
       dropboxPath,
       sellerId: session.user.id,

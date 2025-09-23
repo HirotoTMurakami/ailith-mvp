@@ -63,6 +63,8 @@ model User {
   username             String   @unique
   password             String?
   dropboxAccessToken   String?
+  paypalEmail          String?
+  preferredLanguage    String?
   role                 UserRole @default(SELLER)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt

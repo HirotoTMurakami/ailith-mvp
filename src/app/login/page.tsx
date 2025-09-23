@@ -1,6 +1,7 @@
 "use client"
 import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { t, getLangFromSearch } from '@/lib/i18n'
 
 function AuthInner() {
   const [mode, setMode] = useState<'login'|'signup'>('login')
@@ -10,6 +11,8 @@ function AuthInner() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const search = useSearchParams()
+  const lang = getLangFromSearch(search)
+  const i18n = t(lang)
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
@@ -34,19 +37,19 @@ function AuthInner() {
   return (
     <div className="max-w-sm mx-auto p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{mode === 'login' ? 'Login' : 'Sign Up'}</h1>
+        <h1 className="text-2xl font-semibold">{mode === 'login' ? (lang==='ja'?'ログイン':'Login') : (lang==='ja'?'新規登録':'Sign Up')}</h1>
         <button className="text-sm underline" onClick={() => setMode(mode==='login'?'signup':'login')}>
-          {mode === 'login' ? 'Create account' : 'Have an account? Login'}
+          {mode === 'login' ? (lang==='ja'?'アカウント作成':'Create account') : (lang==='ja'?'アカウントをお持ちですか？ログイン':'Have an account? Login')}
         </button>
       </div>
       <form onSubmit={submit} className="space-y-4">
-        <input className="w-full border p-2" placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} required />
-        <input className="w-full border p-2" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+        <input className="w-full border p-2" placeholder={lang==='ja'?'ユーザー名':'Username'} value={username} onChange={e => setUsername(e.target.value)} required />
+        <input className="w-full border p-2" placeholder={lang==='ja'?'パスワード':'Password'} type="password" value={password} onChange={e => setPassword(e.target.value)} required />
         {mode === 'signup' && (
-          <input className="w-full border p-2" placeholder="Dropbox Access Token (optional)" value={dropbox} onChange={e => setDropbox(e.target.value)} />
+          <input className="w-full border p-2" placeholder={lang==='ja'?'Dropboxアクセストークン（任意）':'Dropbox Access Token (optional)'} value={dropbox} onChange={e => setDropbox(e.target.value)} />
         )}
         {error && <div className="text-red-600">{error}</div>}
-        <button className="bg-blue-600 text-white px-4 py-2 w-full">{mode==='login'?'Login':'Sign Up'}</button>
+        <button className="bg-blue-600 text-white px-4 py-2 w-full">{mode==='login'?(lang==='ja'?'ログイン':'Login'):(lang==='ja'?'新規登録':'Sign Up')}</button>
       </form>
     </div>
   )

@@ -41,6 +41,23 @@ export default function AdminProductsPage() {
     mutate()
   }
 
+  const save = async (p: PendingProduct) => {
+    const priceYen = Math.round(p.priceCents/100)
+    await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath }) })
+    mutate()
+  }
+
+  const remove = async (id: string) => {
+    await fetch('/api/admin/products/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }) })
+    setSelected(s => (s === id ? null : s))
+    mutate()
+  }
+
+  const recordSale = async (id: string, yen: number) => {
+    await fetch('/api/admin/orders/record', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id, amountYen: yen }) })
+    mutate()
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">Pending Products</h1>
@@ -52,9 +69,12 @@ export default function AdminProductsPage() {
           <div key={p.id} className={`border p-3 ${selected===p.id ? 'bg-gray-50' : ''}`}>
             <div className="font-medium">{p.title}</div>
             <div className="text-sm text-gray-700 whitespace-pre-wrap">{p.description}</div>
-            <div className="text-sm text-gray-600">YouTube: <a href={p.youtubeUrl} target="_blank" rel="noreferrer" className="underline break-all">{p.youtubeUrl}</a></div>
-            <div className="text-sm text-gray-600">Dropbox Path: <span className="break-all font-mono">{p.dropboxPath}</span></div>
-            <div className="text-sm text-gray-600">Price: {p.priceCents} ({p.currencyCode})</div>
+            <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" value={p.youtubeUrl} onChange={e => { p.youtubeUrl = e.target.value; }} /></div>
+            <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" value={p.dropboxPath} onChange={e => { p.dropboxPath = e.target.value; }} /></div>
+            <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={Math.round(p.priceCents/100)} onChange={e => { const v = Number(e.target.value)||0; p.priceCents = v*100; }} /> (JPY)</div>
+            <div className="text-sm text-gray-600">Title: <input className="border px-1 py-0.5 w-full" value={p.title} onChange={e => { p.title = e.target.value; }} /></div>
+            <div className="text-sm text-gray-600">Description:<textarea className="border px-1 py-0.5 w-full" value={p.description} onChange={e => { p.description = e.target.value; }} />
+            </div>
             <div className="text-sm text-gray-600">Seller: {p.seller?.username || '-'}</div>
             <div className="text-sm text-gray-600">Seller Dropbox Token: <span className="break-all font-mono">{p.seller?.dropboxAccessToken || '-'}</span></div>
             <div className="text-xs text-gray-500">Temp Link Endpoint: <span className="break-all font-mono">{p.tempLinkEndpoint}</span></div>
@@ -62,6 +82,9 @@ export default function AdminProductsPage() {
             <div className="mt-2 flex gap-3">
               <button className="text-blue-600 underline" onClick={() => setSelected(p.id)}>Select</button>
               <button className="text-red-600 underline" onClick={() => deny(p.id)}>Deny</button>
+              <button className="text-emerald-700 underline" onClick={() => save(p)}>Save</button>
+              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id, Math.round(p.priceCents/100))}>Record Sale</button>
+              <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
             </div>
           </div>
         ))}

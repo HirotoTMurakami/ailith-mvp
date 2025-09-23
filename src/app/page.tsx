@@ -6,9 +6,16 @@ import { getSession } from '@/lib/auth'
 export default async function Home({ searchParams }: { searchParams: { lang?: string } }) {
   const all = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
   const products = all.filter(p => (p as unknown as { approvalStatus?: string }).approvalStatus === 'APPROVED')
-  const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
-  const i18n = t(lang)
   const session = await getSession()
+  let lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
+  if (session.user) {
+    const rows = await prisma.$queryRaw<Array<{ preferredLanguage: string | null }>>`
+      SELECT "preferredLanguage" FROM "User" WHERE id = ${session.user.id}
+    `
+    const pref = rows[0]?.preferredLanguage
+    if (pref === 'ja' || pref === 'en') lang = pref
+  }
+  const i18n = t(lang as 'ja' | 'en')
   return (
     <main className="max-w-5xl mx-auto p-6">
       <div className="flex items-center justify-between mb-4">
@@ -25,6 +32,8 @@ export default async function Home({ searchParams }: { searchParams: { lang?: st
           const match = p.youtubeUrl.match(/(?:v=|youtu\.be\/)([\w-]+)/)
           const vid = match?.[1]
           const thumb = vid ? `https://img.youtube.com/vi/${vid}/hqdefault.jpg` : '/file.svg'
+          const yen = Math.round(p.priceCents / 100)
+          const usdRate = 0.0065
           return (
             <Link key={p.id} href={`/products/${p.id}?lang=${lang}`} className="border hover:shadow-sm rounded overflow-hidden">
               <div className="aspect-video bg-gray-100">
@@ -33,7 +42,7 @@ export default async function Home({ searchParams }: { searchParams: { lang?: st
               </div>
               <div className="p-3">
                 <div className="font-medium line-clamp-1">{p.title}</div>
-                <div className="text-sm text-gray-600">{i18n.priceUSD(p.priceCents)}</div>
+                <div className="text-sm text-gray-600">{i18n.priceJPYWithUSD(yen, usdRate)}</div>
               </div>
             </Link>
           )
