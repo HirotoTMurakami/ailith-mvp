@@ -9,7 +9,13 @@ export async function POST(req: NextRequest) {
   if (me?.role !== 'ADMIN') return NextResponse.json({ error: 'forbidden' }, { status: 403 })
   const { id, title, description, priceYen, youtubeUrl, dropboxPath } = await req.json()
   if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 })
-  const data: any = {}
+  const data: {
+    title?: string
+    description?: string
+    priceCents?: number
+    youtubeUrl?: string
+    dropboxPath?: string
+  } = {}
   if (typeof title === 'string') data.title = title
   if (typeof description === 'string') data.description = description
   if (typeof priceYen === 'number') data.priceCents = Math.round(priceYen * 100)

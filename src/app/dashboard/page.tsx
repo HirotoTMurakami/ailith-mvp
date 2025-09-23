@@ -7,9 +7,8 @@ export default async function Dashboard({ searchParams }: { searchParams: { lang
   if (!session.user) return <div className="max-w-4xl mx-auto p-6">Please login</div>
   const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
   const i18n = t(lang)
-  const myProducts = await prisma.product.findMany({ where: { sellerId: session.user.id } })
   const myOrders = await prisma.order.findMany({ where: { product: { sellerId: session.user.id } }, orderBy: { createdAt: 'desc' } })
-  const totalCents = myOrders.filter(o => (o as any).status === 'PAID').reduce((s, o) => s + o.amountCents, 0)
+  const totalCents = myOrders.filter(o => o.status === 'PAID').reduce((s, o) => s + o.amountCents, 0)
   const payoutCents = Math.round(totalCents * 0.7)
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-4">

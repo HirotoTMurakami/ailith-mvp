@@ -68,19 +68,19 @@ export default function SettingsPage() {
         ) : (
           <ol className="list-decimal ml-5 space-y-1">
             <li>
-              Open <a className="underline text-blue-700" href="https://www.dropbox.com/developers/apps" target="_blank" rel="noreferrer">Dropbox Developers Apps</a> and click "Create app".
+              Open <a className="underline text-blue-700" href="https://www.dropbox.com/developers/apps" target="_blank" rel="noreferrer">Dropbox Developers Apps</a> and click &quot;Create app&quot;.
             </li>
             <li>
-              Choose "Scoped access" and select either "Full Dropbox" or "App folder" depending on your need.
+              Choose &quot;Scoped access&quot; and select either &quot;Full Dropbox&quot; or &quot;App folder&quot; depending on your need.
             </li>
             <li>
-              In the app "Permissions" tab enable at least:
+              In the app &quot;Permissions&quot; tab enable at least:
               <div className="ml-5">
                 <code className="bg-gray-100 px-1">files.content.read</code>, <code className="bg-gray-100 px-1">files.metadata.read</code>
               </div>
             </li>
             <li>
-              In the "Settings" tab generate an access token (via Generated token or OAuth 2 as provided by Dropbox).
+              In the &quot;Settings&quot; tab generate an access token (via Generated token or OAuth 2 as provided by Dropbox).
             </li>
             <li>
               Paste the generated token into the field above and click Save. Do not share your token.
