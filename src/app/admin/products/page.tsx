@@ -1,6 +1,6 @@
 "use client"
 import useSWR from 'swr'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const fetcher = async (url: string) => {
   const r = await fetch(url)
@@ -26,11 +26,33 @@ type PendingProduct = {
   salesCount?: number
 }
 
+type UnpaidPayout = {
+  userId: string
+  username: string
+  paypalEmail: string
+  unpaidAmountCents: number
+  totalSalesCents: number
+  paidAmountCents: number
+}
+
 export default function AdminProductsPage() {
   const { data: pending, error: errP, mutate: mutP } = useSWR<PendingProduct[]>('/api/admin/products/pending', fetcher)
   const { data: approved, error: errA, mutate: mutA } = useSWR<PendingProduct[]>('/api/admin/products/approved', fetcher)
+  const { data: unpaidPayouts, error: errU, mutate: mutU } = useSWR<UnpaidPayout[]>('/api/admin/payouts/unpaid', fetcher)
   const [noteUrl, setNoteUrl] = useState('')
   const [selected, setSelected] = useState<string | null>(null)
+  const [drafts, setDrafts] = useState<Record<string, PendingProduct>>({})
+
+  useEffect(() => {
+    if (!approved) return
+    setDrafts(prev => {
+      const next = { ...prev }
+      for (const p of approved) {
+        if (!next[p.id]) next[p.id] = { ...p }
+      }
+      return next
+    })
+  }, [approved])
 
   const approve = async () => {
     if (!selected || !noteUrl) return
@@ -46,7 +68,7 @@ export default function AdminProductsPage() {
 
   const save = async (p: PendingProduct) => {
     const priceYen = Math.round(p.priceCents/100)
-    await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath, noteUrl: p.noteUrl ?? null }) })
+    await fetch('/api/admin/products/update', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: p.id, title: p.title, description: p.description, priceYen, youtubeUrl: p.youtubeUrl, dropboxPath: p.dropboxPath, noteUrl: p.noteUrl ?? null, salesCount: p.salesCount ?? 0 }) })
     mutP(); mutA()
   }
 
@@ -61,9 +83,41 @@ export default function AdminProductsPage() {
     mutP(); mutA()
   }
 
+  const markPayoutPaid = async (userId: string, amountCents: number) => {
+    await fetch('/api/admin/payouts/mark-paid', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, amountCents }) })
+    mutU()
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Pending Products</h1>
+      <h1 className="text-2xl font-semibold">Unpaid Payouts</h1>
+      {errU && (
+        <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
+      )}
+      <div className="grid gap-2">
+        {Array.isArray(unpaidPayouts) && unpaidPayouts.map((payout) => (
+          <div key={payout.userId} className="border p-3 bg-yellow-50">
+            <div className="font-medium">{payout.username}</div>
+            <div className="text-sm text-gray-600">PayPal: {payout.paypalEmail}</div>
+            <div className="text-sm text-gray-600">Total Sales: ¥{Math.round(payout.totalSalesCents / 100)}</div>
+            <div className="text-sm text-gray-600">Already Paid: ¥{Math.round(payout.paidAmountCents / 100)}</div>
+            <div className="text-sm font-semibold text-green-600">Unpaid Amount: ¥{Math.round(payout.unpaidAmountCents / 100)}</div>
+            <div className="mt-2">
+              <button 
+                className="bg-green-600 text-white px-4 py-2 rounded"
+                onClick={() => markPayoutPaid(payout.userId, payout.unpaidAmountCents)}
+              >
+                Mark as Paid
+              </button>
+            </div>
+          </div>
+        ))}
+        {Array.isArray(unpaidPayouts) && unpaidPayouts.length === 0 && (
+          <div className="text-gray-500 text-center py-4">No unpaid payouts</div>
+        )}
+      </div>
+
+      <h1 className="text-2xl font-semibold mt-8">Pending Products</h1>
       {errP && (
         <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
       )}
@@ -97,23 +151,27 @@ export default function AdminProductsPage() {
         <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
       )}
       <div className="grid gap-2">
-        {Array.isArray(approved) && approved.map((p) => (
-          <div key={p.id} className={`border p-3`}>
-            <div className="font-medium">{p.title}</div>
-            <div className="text-sm text-gray-600">Seller: {p.seller?.username || '-'}</div>
-            <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" defaultValue={p.youtubeUrl} onBlur={e => { p.youtubeUrl = e.target.value; save(p) }} /></div>
-            <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" defaultValue={p.dropboxPath} onBlur={e => { p.dropboxPath = e.target.value; save(p) }} /></div>
-            <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={Math.round(p.priceCents/100)} onBlur={e => { const v = Number(e.target.value)||0; p.priceCents = v*100; save(p) }} /> (JPY)</div>
-            <div className="text-sm text-gray-600">note URL: <input className="border px-1 py-0.5 w-full" defaultValue={p.noteUrl || ''} onBlur={e => { p.noteUrl = e.target.value; save(p) }} /></div>
-            <div className="text-sm text-gray-600">Title: <input className="border px-1 py-0.5 w-full" defaultValue={p.title} onBlur={e => { p.title = e.target.value; save(p) }} /></div>
-            <div className="text-sm text-gray-600">Description:<textarea className="border px-1 py-0.5 w-full" defaultValue={p.description} onBlur={e => { p.description = e.target.value; save(p) }} />
+        {Array.isArray(approved) && approved.map((p) => {
+          const d = drafts[p.id] || p
+          return (
+            <div key={p.id} className={`border p-3`}>
+              <div className="font-medium">{d.title}</div>
+              <div className="text-sm text-gray-600">Seller: {d.seller?.username || '-'}</div>
+              <div className="text-sm text-gray-600">YouTube: <input className="border px-1 py-0.5 w-full" value={d.youtubeUrl} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, youtubeUrl: e.target.value } }))} /></div>
+              <div className="text-sm text-gray-600">Dropbox Path: <input className="border px-1 py-0.5 w-full font-mono" value={d.dropboxPath} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, dropboxPath: e.target.value } }))} /></div>
+              <div className="text-sm text-gray-600">Price: <input type="number" className="border px-1 py-0.5 w-24" value={Math.round(d.priceCents/100)} onChange={e => { const v = Number(e.target.value)||0; setDrafts(s => ({ ...s, [p.id]: { ...d, priceCents: v*100 } })) }} /> (JPY)</div>
+              <div className="text-sm text-gray-600">note URL: <input className="border px-1 py-0.5 w-full" value={d.noteUrl || ''} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, noteUrl: e.target.value } }))} /></div>
+              <div className="text-sm text-gray-600">Title: <input className="border px-1 py-0.5 w-full" value={d.title} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, title: e.target.value } }))} /></div>
+              <div className="text-sm text-gray-600">Description:<textarea className="border px-1 py-0.5 w-full" value={d.description} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, description: e.target.value } }))} />
+              </div>
+              <div className="text-sm text-gray-600">Sales Count: <input type="number" className="border px-1 py-0.5 w-24" value={d.salesCount ?? 0} onChange={e => setDrafts(s => ({ ...s, [p.id]: { ...d, salesCount: Number(e.target.value)||0 } }))} /></div>
+              <div className="mt-2 flex gap-3">
+                <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
+                <button className="text-emerald-700 underline" onClick={() => save(d)}>Apply</button>
+              </div>
             </div>
-            <div className="text-sm text-gray-600">Sales Count: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={p.salesCount ?? 0} onBlur={e => { p.salesCount = Number(e.target.value)||0; save(p) }} /></div>
-            <div className="mt-2 flex gap-3">
-              <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
       {selected && (
         <div className="border p-3 space-y-2">
