@@ -111,7 +111,6 @@ export default function AdminProductsPage() {
             <div className="text-sm text-gray-600">Sales Count: <input type="number" className="border px-1 py-0.5 w-24" defaultValue={p.salesCount ?? 0} onBlur={e => { p.salesCount = Number(e.target.value)||0; save(p) }} /></div>
             <div className="mt-2 flex gap-3">
               <button className="text-gray-700 underline" onClick={() => remove(p.id)}>Delete</button>
-              <button className="text-indigo-700 underline" onClick={() => recordSale(p.id)}>Record Sale</button>
             </div>
           </div>
         ))}
