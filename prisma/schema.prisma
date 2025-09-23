@@ -27,6 +27,7 @@ model Product {
   updatedAt     DateTime @updatedAt
   orders        Order[]
   messages      Message[]
+  salesCount    Int      @default(0)
 }
 
 model Order {

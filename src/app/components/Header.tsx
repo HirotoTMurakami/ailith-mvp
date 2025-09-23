@@ -17,28 +17,25 @@ export default function Header() {
     window.location.href = '/'
   }
   return (
-    <header className="border-b bg-white">
-      <div className="max-w-5xl mx-auto p-4 flex items-center justify-between">
-        <Link href={`/?lang=${lang}`} className="font-semibold flex items-center gap-2">
-          <span className="inline-block w-6 h-6 rounded bg-black text-white text-xs flex items-center justify-center">A</span>
+    <header className="border-b bg-[var(--card)]/90 backdrop-blur">
+      <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <Link href={`/?lang=${lang}`} className="font-semibold flex items-center gap-2 text-[var(--foreground)]">
+          <span className="inline-block w-7 h-7 rounded-md bg-[var(--foreground)] text-[var(--card)] text-xs flex items-center justify-center">A</span>
           {i18n.header.brand}
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          {user ? (
-            <Link href={`/products/new?lang=${lang}`}>{i18n.header.new}</Link>
-          ) : (
-            <Link href={`/login?next=%2Fproducts%2Fnew&lang=${lang}`}>{i18n.header.new}</Link>
-          )}
+        <nav className="flex items-center gap-4 text-sm text-[var(--foreground)]">
           {user ? (
             <>
+              <Link href={`/products/new?lang=${lang}`}>{i18n.header.new}</Link>
               <Link href={`/settings?lang=${lang}`}>{i18n.header.settings}</Link>
               <Link href={`/dashboard?lang=${lang}`}>{i18n.header.dashboard}</Link>
-              {user.role === 'ADMIN' && <Link href={`/admin/products?lang=${lang}`}>{i18n.header.admin}</Link>}
-              <Link href={`/messages?lang=${lang}`}>{i18n.header.messages}</Link>
-              <button onClick={logout} className="text-gray-600">{i18n.header.logout}</button>
+              <button onClick={logout} className="text-[var(--muted)] hover:text-[var(--foreground)]">{i18n.header.logout}</button>
             </>
           ) : (
-            <Link href={`/login?lang=${lang}`}>{i18n.header.login}</Link>
+            <>
+              <Link href={`/login?next=%2Fproducts%2Fnew&lang=${lang}`}>{i18n.header.new}</Link>
+              <Link href={`/login?lang=${lang}`}>{i18n.header.login}</Link>
+            </>
           )}
         </nav>
       </div>
