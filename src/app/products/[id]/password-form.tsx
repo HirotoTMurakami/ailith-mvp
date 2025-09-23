@@ -15,8 +15,9 @@ export default function PasswordForm({ productId }: { productId: string }) {
       const json = await res.json()
       if (!res.ok) throw new Error(json.error || 'Failed')
       window.location.href = json.url
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed'
+      setError(message)
     } finally {
       setLoading(false)
     }

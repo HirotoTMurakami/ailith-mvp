@@ -3,7 +3,8 @@ import { prisma } from '@/lib/prisma'
 import { t } from '@/lib/i18n'
 
 export default async function Home({ searchParams }: { searchParams: { lang?: string } }) {
-  const products = await prisma.product.findMany({ where: { approvalStatus: 'APPROVED' }, orderBy: { createdAt: 'desc' } })
+  const all = await prisma.product.findMany({ orderBy: { createdAt: 'desc' } })
+  const products = all.filter(p => (p as unknown as { approvalStatus?: string }).approvalStatus === 'APPROVED')
   const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
   const i18n = t(lang)
   return (

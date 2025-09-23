@@ -9,7 +9,7 @@ export default async function ProductDetail({ params, searchParams }: { params: 
   if (!product) {
     return <div className="p-6">Not found</div>
   }
-  if (product.approvalStatus !== 'APPROVED') {
+  if ((product as unknown as { approvalStatus?: string }).approvalStatus !== 'APPROVED') {
     return <div className="p-6">Not available</div>
   }
   const lang = searchParams?.lang === 'ja' ? 'ja' : 'en'
