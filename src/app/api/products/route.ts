@@ -12,6 +12,13 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getSession()
     if (!session.user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+    const rows = await prisma.$queryRaw<Array<{ dropboxAccessToken: string | null }>>`
+      SELECT "dropboxAccessToken" FROM "User" WHERE id = ${session.user.id}
+    `
+    const meToken = rows[0]?.dropboxAccessToken ?? null
+    if (!meToken) {
+      return NextResponse.json({ error: 'Seller Dropbox Access Token is required. Please set it in Settings.' }, { status: 400 })
+    }
     const body = await req.json()
     const { title, description, priceCents, currencyCode = '840', youtubeUrl, dropboxPath } = body
     if (!title || !youtubeUrl || !dropboxPath || !priceCents) {

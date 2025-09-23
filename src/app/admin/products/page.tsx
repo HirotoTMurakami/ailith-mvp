@@ -21,6 +21,7 @@ type PendingProduct = {
   dropboxPath: string
   downloadPassword?: string | null
   seller: { id: string; username: string; dropboxAccessToken: string | null } | null
+  tempLinkEndpoint?: string
 }
 
 export default function AdminProductsPage() {
@@ -32,6 +33,12 @@ export default function AdminProductsPage() {
     if (!selected || !noteUrl) return
     const res = await fetch('/api/admin/products/approve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: selected, noteUrl }) })
     if (res.ok) { setSelected(null); setNoteUrl(''); mutate() }
+  }
+
+  const deny = async (id: string) => {
+    await fetch('/api/admin/products/deny', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: id }) })
+    setSelected(s => (s === id ? null : s))
+    mutate()
   }
 
   return (
@@ -50,8 +57,12 @@ export default function AdminProductsPage() {
             <div className="text-sm text-gray-600">Price: {p.priceCents} ({p.currencyCode})</div>
             <div className="text-sm text-gray-600">Seller: {p.seller?.username || '-'}</div>
             <div className="text-sm text-gray-600">Seller Dropbox Token: <span className="break-all font-mono">{p.seller?.dropboxAccessToken || '-'}</span></div>
+            <div className="text-xs text-gray-500">Temp Link Endpoint: <span className="break-all font-mono">{p.tempLinkEndpoint}</span></div>
             <div className="text-sm text-gray-600">Password: <span className="font-mono">{p.downloadPassword || '-'}</span></div>
-            <button className="mt-2 text-blue-600 underline" onClick={() => setSelected(p.id)}>Select</button>
+            <div className="mt-2 flex gap-3">
+              <button className="text-blue-600 underline" onClick={() => setSelected(p.id)}>Select</button>
+              <button className="text-red-600 underline" onClick={() => deny(p.id)}>Deny</button>
+            </div>
           </div>
         ))}
       </div>
