@@ -11,12 +11,12 @@ export default function ContactPage({ searchParams }: { searchParams: { lang?: s
       {lang==='ja' ? (
         <div className="space-y-3 text-gray-700">
           <p>ご不明点やご要望は、以下のメールアドレスにご連絡ください。</p>
-          <p>メール: support@example.com</p>
+          <p>メール: marksman.gk@gmail.com</p>
         </div>
       ) : (
         <div className="space-y-3 text-gray-700">
           <p>For questions or requests, please contact us at the email below.</p>
-          <p>Email: support@example.com</p>
+          <p>Email: marksman.gk@gmail.com</p>
         </div>
       )}
     </main>

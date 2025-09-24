@@ -13,6 +13,8 @@ function NewProductFormInner() {
   const [description, setDescription] = useState('')
   const [priceYen, setPriceYen] = useState<number>(0)
   const [youtubeUrl, setYoutubeUrl] = useState('')
+  const [productType, setProductType] = useState<'VIDEO'|'IMAGE'>('VIDEO')
+  const [sampleImages, setSampleImages] = useState<string>('')
   const [dropboxPath, setDropboxPath] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -26,7 +28,7 @@ function NewProductFormInner() {
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description, priceYen, youtubeUrl, dropboxPath })
+        body: JSON.stringify({ title, description, priceYen, youtubeUrl, dropboxPath, productType, sampleImageUrls: sampleImages.split('\n').map(s=>s.trim()).filter(Boolean) })
       })
       if (!res.ok) throw new Error('Failed to create product')
       const product = await res.json()
@@ -53,7 +55,15 @@ function NewProductFormInner() {
           <span className="text-xs text-gray-500">{i18n.priceJPYWithUSD(Number(priceYen||0), usdRate)}</span>
         </div>
         <input type="number" className="w-full border p-2" placeholder={i18n.priceYenPlaceholder} value={priceYen} onChange={e => setPriceYen(Number(e.target.value))} required />
-        <input className="w-full border p-2" placeholder={i18n.youtubeUrl} value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} required />
+        <div className="flex items-center gap-2">
+          <label className="text-sm text-gray-700 w-40">{lang==='ja'?'商品タイプ':'Product Type'}</label>
+          <select className="border p-2" value={productType} onChange={e=>setProductType(e.target.value as 'VIDEO'|'IMAGE')}>
+            <option value="VIDEO">{lang==='ja'?'動画':'Video'}</option>
+            <option value="IMAGE">{lang==='ja'?'画像':'Image'}</option>
+          </select>
+        </div>
+        <input className="w-full border p-2" placeholder={i18n.youtubeUrl + ' (' + (lang==='ja'?'任意':'optional') + ')'} value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} />
+        <textarea className="w-full border p-2" rows={3} placeholder={lang==='ja'?'サンプル画像URL（1行に1つ）':'Sample image URLs (one per line)'} value={sampleImages} onChange={e=>setSampleImages(e.target.value)} />
         <input className="w-full border p-2" placeholder={`${i18n.dropboxPath} (e.g. /videos/foo.mp4)`} value={dropboxPath} onChange={e => setDropboxPath(e.target.value)} required />
         <div className="text-xs text-gray-600 leading-5">
           {lang==='ja' ? (

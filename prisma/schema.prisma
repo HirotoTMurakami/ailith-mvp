@@ -16,11 +16,13 @@ model Product {
   description   String
   priceCents    Int
   currencyCode  String   @default("840") // 840=USD per ISO 4217 numeric
-  youtubeUrl    String
+  youtubeUrl    String?
   dropboxPath   String   // Dropbox file path accessible to the app token
   noteUrl       String?  // External note URL to purchase password
   downloadPassword String?
   approvalStatus  ProductStatus @default(PENDING)
+  productType   ProductType @default(VIDEO)
+  sampleImageUrls String[] @default([])
   sellerId      String?
   seller        User?    @relation(fields: [sellerId], references: [id])
   createdAt     DateTime @default(now())
@@ -82,6 +84,11 @@ enum ProductStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum ProductType {
+  VIDEO
+  IMAGE
 }
 
 model Message {

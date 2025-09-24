@@ -23,21 +23,33 @@ export default async function ProductDetail({ params, searchParams }: { params: 
     if (pref === 'ja' || pref === 'en') lang = pref
   }
   const i18n = t(lang)
-  // Extract YouTube embed id
-  const match = product.youtubeUrl.match(/(?:v=|youtu\.be\/)([\w-]+)/)
+  // Extract YouTube embed id and sample images
+  const yt = (product as unknown as { youtubeUrl?: string | null }).youtubeUrl || ''
+  const match = yt.match(/(?:v=|youtu\.be\/)([\w-]+)/)
   const videoId = match?.[1]
+  const sampleImages = (product as unknown as { sampleImageUrls?: string[] }).sampleImageUrls || []
 
   const yen = Math.round(product.priceCents / 100)
   const usdRate = 0.0065
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-4">
       <h1 className="text-2xl font-semibold">{product.title}</h1>
-      {videoId && (
+      {(videoId || sampleImages.length>0) && (
         <div>
           <div className="text-xs text-gray-600 mb-1">{i18n.samplePreview}</div>
-          <div className="aspect-video border">
-            <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${videoId}`} title="Sample preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-          </div>
+          {videoId && (
+            <div className="aspect-video border mb-2">
+              <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${videoId}`} title="Sample preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+            </div>
+          )}
+          {sampleImages.length>0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {sampleImages.map((src,idx)=> (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={idx} src={src} alt={`sample-${idx}`} className="w-full h-32 object-cover border" />
+              ))}
+            </div>
+          )}
         </div>
       )}
       <p className="text-gray-700 whitespace-pre-line">{product.description}</p>
