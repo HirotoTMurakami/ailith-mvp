@@ -24,6 +24,8 @@ export default function Header() {
           {i18n.header.brand}
         </Link>
         <nav className="flex items-center gap-4 text-sm text-[var(--foreground)]">
+          <Link href={`/about?lang=${lang}`}>{lang==='ja'?'Ailithとは？':'About'}</Link>
+          <Link href={`/how-to?lang=${lang}`}>{lang==='ja'?'使い方':'How to'}</Link>
           {user ? (
             <>
               <Link href={`/products/new?lang=${lang}`}>{i18n.header.new}</Link>
