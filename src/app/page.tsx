@@ -13,14 +13,18 @@ export default async function Home({ searchParams }: { searchParams: { lang?: st
     : approved
   const products = q ? byType.filter(p => (p.title + ' ' + (p as unknown as { description?: string }).description || '').toLowerCase().includes(q.toLowerCase())) : byType
   const session = await getSession()
-  // Prefer URL lang over user preference
-  let lang = searchParams?.lang === 'ja' ? 'ja' : searchParams?.lang === 'en' ? 'en' : 'en'
-  if (!searchParams?.lang && session.user) {
+  // Prefer user preference over URL
+  let lang: 'ja' | 'en' = 'en'
+  if (session.user) {
     const rows = await prisma.$queryRaw<Array<{ preferredLanguage: string | null }>>`
       SELECT "preferredLanguage" FROM "User" WHERE id = ${session.user.id}
     `
     const pref = rows[0]?.preferredLanguage
     if (pref === 'ja' || pref === 'en') lang = pref
+  }
+  // If URL lang param exists, still allow override for immediate viewing without changing settings
+  if (searchParams?.lang === 'ja' || searchParams?.lang === 'en') {
+    lang = searchParams.lang
   }
   const i18n = t(lang as 'ja' | 'en')
   return (

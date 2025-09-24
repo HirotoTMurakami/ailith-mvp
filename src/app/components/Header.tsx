@@ -64,7 +64,7 @@ export default function Header() {
           )}
           <div className="h-6 w-px bg-gray-300 mx-2"></div>
           <button
-            onClick={() => {
+            onClick={async () => {
               const currentPath = window.location.pathname
               const currentSearch = window.location.search
               const newLang = lang === 'ja' ? 'en' : 'ja'
@@ -79,6 +79,15 @@ export default function Header() {
               } else {
                 newUrl += `?lang=${newLang}`
               }
+              try {
+                if (user) {
+                  await fetch('/api/users/me/language', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ preferredLanguage: newLang })
+                  })
+                }
+              } catch {}
               window.location.href = newUrl
             }}
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium"
