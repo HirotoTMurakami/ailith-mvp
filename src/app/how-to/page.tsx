@@ -69,7 +69,7 @@ export default async function HowToPage({ searchParams }: { searchParams: { lang
           ) : (
             <div className="space-y-6">
               <div className="bg-green-50 p-6 rounded-xl border border-green-200">
-                <h2 className="text-xl font-semibold text-green-800 mb-3">🎯 Creator's Guide</h2>
+                <h2 className="text-xl font-semibold text-green-800 mb-3">🎯 Creator&apos;s Guide</h2>
                 <div className="space-y-3">
                   <div className="flex gap-3">
                     <span className="bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</span>
@@ -77,7 +77,7 @@ export default async function HowToPage({ searchParams }: { searchParams: { lang
                   </div>
                   <div className="flex gap-3">
                     <span className="bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p className="text-green-700">Use "New" to submit title, description, price (JPY), product type (video/image), samples, and Dropbox file path.</p>
+                    <p className="text-green-700">Use &quot;New&quot; to submit title, description, price (JPY), product type (video/image), samples, and Dropbox file path.</p>
                   </div>
                   <div className="flex gap-3">
                     <span className="bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</span>
@@ -90,7 +90,7 @@ export default async function HowToPage({ searchParams }: { searchParams: { lang
                 </div>
               </div>
               <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
-                <h2 className="text-xl font-semibold text-blue-800 mb-3">🛒 Buyer's Guide</h2>
+                <h2 className="text-xl font-semibold text-blue-800 mb-3">🛒 Buyer&apos;s Guide</h2>
                 <div className="space-y-3">
                   <div className="flex gap-3">
                     <span className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">1</span>
@@ -98,7 +98,7 @@ export default async function HowToPage({ searchParams }: { searchParams: { lang
                   </div>
                   <div className="flex gap-3">
                     <span className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">2</span>
-                    <p className="text-blue-700">Click "Buy with note" to securely purchase on note.com and receive the password.</p>
+                    <p className="text-blue-700">Click &quot;Buy with note&quot; to securely purchase on note.com and receive the password.</p>
                   </div>
                   <div className="flex gap-3">
                     <span className="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">3</span>

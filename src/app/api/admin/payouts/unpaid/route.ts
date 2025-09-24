@@ -46,7 +46,7 @@ export async function GET() {
     }
 
     return NextResponse.json(unpaidPayouts)
-  } catch (error) {
+  } catch (_err) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

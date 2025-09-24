@@ -70,7 +70,7 @@ export default async function ContactPage({ searchParams }: { searchParams: { la
               <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
                 <h2 className="text-xl font-semibold text-blue-800 mb-3">📧 Email Contact</h2>
                 <p className="text-blue-700 leading-relaxed mb-4">
-                  For questions or requests, please contact us at the email below. We'll respond as quickly as possible.
+                  For questions or requests, please contact us at the email below. We&apos;ll respond as quickly as possible.
                 </p>
                 <div className="bg-white p-4 rounded-lg border">
                   <div className="flex items-center gap-3">
@@ -99,7 +99,7 @@ export default async function ContactPage({ searchParams }: { searchParams: { la
               <div className="bg-yellow-50 p-6 rounded-xl border border-yellow-200">
                 <h2 className="text-xl font-semibold text-yellow-800 mb-3">⏰ Response Time</h2>
                 <p className="text-yellow-700 leading-relaxed">
-                  We typically respond within one business day. For urgent matters, please include "URGENT" in your email subject.
+                  We typically respond within one business day. For urgent matters, please include &quot;URGENT&quot; in your email subject.
                 </p>
               </div>
             </div>
