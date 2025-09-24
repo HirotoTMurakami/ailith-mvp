@@ -81,10 +81,9 @@ export default function Header() {
               }
               window.location.href = newUrl
             }}
-            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium"
           >
-            <span>{lang === 'ja' ? '🇺🇸' : '🇯🇵'}</span>
-            <span>{lang === 'ja' ? 'EN' : 'JA'}</span>
+            <span>{lang === 'ja' ? 'English' : '日本語'}</span>
           </button>
         </nav>
       </div>
