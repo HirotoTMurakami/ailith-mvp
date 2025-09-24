@@ -17,26 +17,49 @@ export default function Header() {
     window.location.href = '/'
   }
   return (
-    <header className="border-b bg-[var(--card)]/90 backdrop-blur sticky top-0 z-40">
-      <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href={`/?lang=${lang}`} className="font-semibold flex items-center gap-2 text-[var(--foreground)]">
-          <span className="inline-block w-7 h-7 rounded-md bg-[var(--foreground)] text-[var(--card)] text-xs flex items-center justify-center">A</span>
-          {i18n.header.brand}
+    <header className="floating-header sticky top-0 z-50 shadow-sm">
+      <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <Link href={`/?lang=${lang}`} className="font-bold flex items-center gap-3 text-gray-800 hover:opacity-80 transition-opacity">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg flex items-center justify-center shadow-lg">
+            A
+          </div>
+          <span className="gradient-text text-xl">{i18n.header.brand}</span>
         </Link>
-        <nav className="flex items-center gap-4 text-sm text-[var(--foreground)]">
-          <Link href={`/about?lang=${lang}`}>{lang==='ja'?'Ailithとは？':'About'}</Link>
-          <Link href={`/how-to?lang=${lang}`}>{lang==='ja'?'使い方':'How to'}</Link>
+        <nav className="flex items-center gap-6 text-sm font-medium">
+          <Link href={`/about?lang=${lang}`} className="text-gray-600 hover:text-gray-900 transition-colors">
+            {lang==='ja'?'Ailithとは？':'About'}
+          </Link>
+          <Link href={`/how-to?lang=${lang}`} className="text-gray-600 hover:text-gray-900 transition-colors">
+            {lang==='ja'?'使い方':'How to'}
+          </Link>
           {user ? (
             <>
-              <Link href={`/products/new?lang=${lang}`}>{i18n.header.new}</Link>
-              <Link href={`/settings?lang=${lang}`}>{i18n.header.settings}</Link>
-              <Link href={`/dashboard?lang=${lang}`}>{i18n.header.dashboard}</Link>
-              <button onClick={logout} className="text-[var(--muted)] hover:text-[var(--foreground)]">{i18n.header.logout}</button>
+              <Link href={`/products/new?lang=${lang}`} className="modern-button-primary">
+                {i18n.header.new}
+              </Link>
+              <Link href={`/settings?lang=${lang}`} className="text-gray-600 hover:text-gray-900 transition-colors">
+                {i18n.header.settings}
+              </Link>
+              <Link href={`/dashboard?lang=${lang}`} className="text-gray-600 hover:text-gray-900 transition-colors">
+                {i18n.header.dashboard}
+              </Link>
+              {user.role === 'ADMIN' && (
+                <Link href={`/admin/products?lang=${lang}`} className="text-purple-600 hover:text-purple-800 transition-colors">
+                  {i18n.header.admin}
+                </Link>
+              )}
+              <button onClick={logout} className="text-gray-500 hover:text-gray-700 transition-colors">
+                {i18n.header.logout}
+              </button>
             </>
           ) : (
             <>
-              <Link href={`/login?next=%2Fproducts%2Fnew&lang=${lang}`}>{i18n.header.new}</Link>
-              <Link href={`/login?lang=${lang}`}>{i18n.header.login}</Link>
+              <Link href={`/login?next=%2Fproducts%2Fnew&lang=${lang}`} className="modern-button-primary">
+                {i18n.header.new}
+              </Link>
+              <Link href={`/login?lang=${lang}`} className="modern-button-secondary">
+                {i18n.header.login}
+              </Link>
             </>
           )}
         </nav>

@@ -33,23 +33,76 @@ function SettingsInner() {
     router.refresh()
   }
   return (
-    <div className="max-w-lg mx-auto p-6">
-      <h1 className="text-2xl font-semibold mb-4">{lang==='ja'?'設定':'Settings'}</h1>
-      <form onSubmit={submit} className="space-y-4">
-        <input className="w-full border p-2" placeholder={lang==='ja'?'Dropboxアクセス・トークン':'Dropbox Access Token'} value={dropboxAccessToken} onChange={e => setToken(e.target.value)} />
-        <input className="w-full border p-2" placeholder={lang==='ja'?'PayPalメールアドレス':'PayPal Email'} value={paypalEmail} onChange={e => setPaypal(e.target.value)} />
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-700 w-40">{lang==='ja'?'言語設定':'Language Preference'}</label>
-          <select className="border p-2" value={preferredLanguage} onChange={e => setLang((e.target.value as 'ja'|'en'))}>
-            <option value="en">English</option>
-            <option value="ja">日本語</option>
-          </select>
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="max-w-3xl mx-auto px-6 py-8">
+        <div className="glass-card p-8 mb-6">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold gradient-text mb-2">{lang==='ja'?'設定':'Settings'}</h1>
+            <p className="text-gray-600">{lang==='ja'?'アカウント設定を管理します':'Manage your account settings'}</p>
+          </div>
+          
+          <form onSubmit={submit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {lang==='ja'?'Dropboxアクセス・トークン':'Dropbox Access Token'}
+              </label>
+              <input 
+                className="modern-input" 
+                placeholder={lang==='ja'?'Dropboxアクセス・トークン':'Dropbox Access Token'} 
+                value={dropboxAccessToken} 
+                onChange={e => setToken(e.target.value)} 
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {lang==='ja'?'PayPalメールアドレス':'PayPal Email'}
+              </label>
+              <input 
+                className="modern-input" 
+                type="email"
+                placeholder={lang==='ja'?'PayPalメールアドレス':'PayPal Email'} 
+                value={paypalEmail} 
+                onChange={e => setPaypal(e.target.value)} 
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {lang==='ja'?'言語設定':'Language Preference'}
+              </label>
+              <select 
+                className="modern-input" 
+                value={preferredLanguage} 
+                onChange={e => setLang((e.target.value as 'ja'|'en'))}
+              >
+                <option value="en">🇺🇸 English</option>
+                <option value="ja">🇯🇵 日本語</option>
+              </select>
+            </div>
+            
+            {msg && (
+              <div className={`p-4 rounded-xl border ${msg === 'Saved' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+                {msg === 'Saved' ? (lang==='ja'?'✓ 保存されました':'✓ Settings saved') : msg}
+              </div>
+            )}
+            
+            <button className="w-full modern-button-primary text-lg py-3">
+              💾 {lang==='ja'?'保存':'Save Settings'}
+            </button>
+          </form>
         </div>
-        <button className="bg-blue-600 text-white px-4 py-2">{lang==='ja'?'保存':'Save'}</button>
-      </form>
-      {msg && <p className="mt-2 text-sm">{msg}</p>}
-      <div className="mt-6 text-sm leading-6">
-        <h2 className="font-medium mb-2">{lang==='ja'?'Dropbox Access Token の発行方法':'How to generate a Dropbox Access Token'}</h2>
+        
+        <div className="glass-card p-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            📚 {lang==='ja'?'Dropbox Access Token の発行方法':'How to generate a Dropbox Access Token'}
+          </h2>
+          <div className="text-sm leading-6 text-gray-700">
+            <div className="p-4 bg-blue-50 rounded-xl border border-blue-200 mb-4">
+              <div className="text-blue-800 font-medium">
+                {lang==='ja'?'⚠️ 重要: トークンは第三者と共有しないでください':'⚠️ Important: Never share your token with others'}
+              </div>
+            </div>
         {lang==='ja' ? (
           <ol className="list-decimal ml-5 space-y-1">
             <li>
