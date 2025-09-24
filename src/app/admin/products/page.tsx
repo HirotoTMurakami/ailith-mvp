@@ -89,8 +89,15 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-semibold">Unpaid Payouts</h1>
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="glass-card p-8 mb-6">
+          <h1 className="text-4xl font-bold gradient-text mb-4">Admin Dashboard</h1>
+          <p className="text-xl text-gray-600 mb-8">Manage payouts, review submissions, and oversee content</p>
+          
+          <h2 className="text-2xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            💰 Unpaid Payouts
+          </h2>
       {errU && (
         <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
       )}

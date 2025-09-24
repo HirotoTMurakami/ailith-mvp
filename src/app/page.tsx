@@ -46,14 +46,14 @@ export default async function Home({ searchParams }: { searchParams: { lang?: st
           
           <form className="mb-6" action="/" method="get">
             <input type="hidden" name="lang" value={lang} />
-            <div className="flex flex-col md:flex-row gap-3">
-              <input name="q" defaultValue={q} className="modern-input flex-1" placeholder={lang==='ja'?'タイトル・説明で検索':'Search by title or description'} />
-              <select name="type" defaultValue={type || ''} className="modern-input md:w-40">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input name="q" defaultValue={q} className="modern-input flex-1 min-w-0" placeholder={lang==='ja'?'タイトル・説明で検索':'Search by title or description'} />
+              <select name="type" defaultValue={type || ''} className="modern-input sm:w-32">
                 <option value="">{lang==='ja'?'すべて':'All'}</option>
                 <option value="video">{lang==='ja'?'動画':'Video'}</option>
                 <option value="image">{lang==='ja'?'画像':'Image'}</option>
               </select>
-              <button className="modern-button-primary whitespace-nowrap">
+              <button className="modern-button-primary sm:w-24 whitespace-nowrap">
                 {lang==='ja'?'検索':'Search'}
               </button>
             </div>

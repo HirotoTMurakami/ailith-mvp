@@ -62,6 +62,30 @@ export default function Header() {
               </Link>
             </>
           )}
+          <div className="h-6 w-px bg-gray-300 mx-2"></div>
+          <button
+            onClick={() => {
+              const currentPath = window.location.pathname
+              const currentSearch = window.location.search
+              const newLang = lang === 'ja' ? 'en' : 'ja'
+              const hasParams = currentSearch.includes('?')
+              const hasLangParam = currentSearch.includes('lang=')
+              
+              let newUrl = currentPath
+              if (hasLangParam) {
+                newUrl += currentSearch.replace(/lang=(ja|en)/, `lang=${newLang}`)
+              } else if (hasParams) {
+                newUrl += currentSearch + `&lang=${newLang}`
+              } else {
+                newUrl += `?lang=${newLang}`
+              }
+              window.location.href = newUrl
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-xs font-medium"
+          >
+            <span>{lang === 'ja' ? '🇺🇸' : '🇯🇵'}</span>
+            <span>{lang === 'ja' ? 'EN' : 'JA'}</span>
+          </button>
         </nav>
       </div>
     </header>
