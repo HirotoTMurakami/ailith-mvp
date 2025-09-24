@@ -155,6 +155,8 @@ function SettingsInner() {
         )}
       </div>
     </div>
+  </div>
+</div>
   )
 }
 
