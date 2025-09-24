@@ -124,6 +124,8 @@ export default function AdminProductsPage() {
         )}
       </div>
 
+        </div>
+
       <h1 className="text-2xl font-semibold mt-8">Pending Products</h1>
       {errP && (
         <div className="text-red-600">Access denied or error. Please login as ADMIN.</div>
@@ -186,6 +188,7 @@ export default function AdminProductsPage() {
           <button className="bg-emerald-600 text-white px-4 py-2" onClick={approve}>Approve</button>
         </div>
       )}
+      </div>
     </div>
   )
 }
