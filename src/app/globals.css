@@ -64,11 +64,11 @@ body {
 }
 
 .modern-button-primary {
-  @apply modern-button bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 focus:ring-blue-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
+  @apply px-6 py-3 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-offset-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 focus:ring-blue-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
 }
 
 .modern-button-secondary {
-  @apply modern-button bg-white/90 text-gray-700 border border-gray-200 hover:bg-gray-50 focus:ring-gray-500 backdrop-blur-sm;
+  @apply px-6 py-3 rounded-xl font-medium transition-all duration-200 focus:ring-2 focus:ring-offset-2 bg-white/90 text-gray-700 border border-gray-200 hover:bg-gray-50 focus:ring-gray-500 backdrop-blur-sm;
 }
 
 .modern-card {
